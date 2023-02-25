@@ -41,7 +41,7 @@ def send_otp_for_authentication(id,_secret_key):
 def login():
     _email = request.json['email']
     _password = request.json['password']
-    _secret_key = request.json['secret key']
+    _secret_key = request.json['OTP']
 	# check for user exist or not
     if collection1.count_documents({'email':_email})==0:
         return jsonify("User not exist")
@@ -59,16 +59,15 @@ def login():
     else:
         return jsonify("User does not exist")
 
-@app.route('/')
-def fetch():
-    page = int(request.args.get("page", 1))
+
+@app.route('/<page_>',methods = ['POST'])
+def fetch(page_):
+    page = int(request.args.get("page", page_))
     per_page = 10  # A const value.
 
     # For pagination, it's necessary to sort by name,
     # then skip the number of docs that earlier pages would have displayed,
     # and then to limit to the fixed page size, ``per_page``.
-    data = collection.find()
-    
     cursor = collection.find().sort("name").skip(per_page * (page - 1)).limit(per_page)
     return [json.loads(json_util.dumps(doc)) for doc in cursor]
 
@@ -223,10 +222,7 @@ def post():
     else:
         return not_found()
 
-
-    
-        
-
+# Error Handler
 @app.errorhandler(404)
 def not_found(error = None):
     message = {
@@ -236,7 +232,6 @@ def not_found(error = None):
     resp = jsonify(message)
     resp.status_code = 404
     return resp    
-
 
 
 if __name__=='__main__':
