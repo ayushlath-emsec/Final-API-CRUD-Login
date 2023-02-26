@@ -4,6 +4,8 @@ try:
     from bson.json_util import dumps
     from bson.objectid import ObjectId
     import json
+    import datetime
+    import time
     import re
     import bcrypt
     import pyotp
@@ -18,7 +20,7 @@ app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
 
-# Database Connection
+# database connection
 def databaseConnection():
    CONNECTION_STRING = "mongodb+srv://emseccomandcenter:TUXnEN09VNM1drh3@cluster0.psiqanw.mongodb.net/?retryWrites=true&w=majority"
    client = MongoClient(CONNECTION_STRING)
@@ -167,7 +169,7 @@ def website(id):
         if(len(str(_isUrgent))>0):
             dict['isUrgent'] = _isUrgent
         
-        # Update values in website
+        # update values in database
         collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict})
                 
         resp = jsonify("Website updated")
@@ -189,15 +191,19 @@ def post():
     xpath_of_next_btn=request.json['xpath_of_next_btn']
     xpath_of_pagination_container=request.json['xpath_of_pagination_container']
     tag_name_of_pages=request.json['tag_name_of_pages']
+    failed_count = 0
     clickable =request.json['clickable']
     clickable_btn_xpath =request.json['clickable_btn_xpath']
     waitTime =request.json['waitTime']
+    status = "not started"
     isSPA =request.json['isSPA']
-    isUrgent =request.json['isUrgent']
+    time = datetime.date.fromtimestamp(time.time())
+    isUrgent = False
+    
     if collection.count_documents({'darkweb_url':darkweb_url})>0:
         return jsonify("url Already exist.. Update the field if you need")
     if request.method == "POST":
-        collection.insert_one({'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'isSPA':isSPA,'isUrgent':isUrgent})
+        collection.insert_one({'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'failedCount':failed_count,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'status':status,'isSPA':isSPA,'time':time,'isUrgent':isUrgent})
         resp = jsonify("Website added successfully")
         resp.status_code = 200
         return resp
