@@ -14,6 +14,9 @@ except Exception as e:
     print("Some Modules are Missing :{}".format(e))
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
+socketio = SocketIO(app, cors_allowed_origins="*")
+CORS(app)
 
 def databaseConnection():
    CONNECTION_STRING = "mongodb+srv://emseccomandcenter:TUXnEN09VNM1drh3@cluster0.psiqanw.mongodb.net/?retryWrites=true&w=majority"
@@ -79,7 +82,7 @@ def sendData():
 @app.route('/sendLog',methods=['POST'])
 def sendLog():
     data=request.json['msg']
-    socketio.emit('log',msg)
+    socketio.emit('log',data)
     return jsonify({'result':'OK'})
 
 # GET , PUT and UPDATE Website
