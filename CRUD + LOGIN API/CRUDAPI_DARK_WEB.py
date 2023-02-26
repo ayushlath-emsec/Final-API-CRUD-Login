@@ -1,6 +1,7 @@
 try:
     from flask import Flask, jsonify, request
     from pymongo import MongoClient
+    from bson.json_util import dumps
     from bson.objectid import ObjectId
     import json
     import re
@@ -9,15 +10,10 @@ try:
     from bson import json_util
     from flask_socketio import SocketIO
     from flask_cors import CORS
-    from bson.json_util import dumps
 except Exception as e:
     print("Some Modules are Missing :{}".format(e))
 
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = 'vnkdjnfjknfl1112#'
-socketio = SocketIO(app, cors_allowed_origins="*")
-CORS(app)
 
 def databaseConnection():
    CONNECTION_STRING = "mongodb+srv://emseccomandcenter:TUXnEN09VNM1drh3@cluster0.psiqanw.mongodb.net/?retryWrites=true&w=majority"
@@ -43,7 +39,6 @@ def send_otp_for_authentication(id,_secret_key):
     return totp.verify(_secret_key)
     
 
-
 @app.route('/login', methods=['POST'])
 def login():
     _email = request.json['email']
@@ -67,25 +62,26 @@ def login():
         return jsonify("User does not exist")
 
 
-@app.route('/<page_>',methods = ['POST'])
-def fetch(page_):
-    page = int(request.args.get("page", page_))
-    per_page = 10  # A const value.
-
-    # For pagination, it's necessary to sort by name,
-    # then skip the number of docs that earlier pages would have displayed,
-    # and then to limit to the fixed page size, ``per_page``.
-    cursor = collection.find().sort("name").skip(per_page * (page - 1)).limit(per_page)
-    return [json.loads(json_util.dumps(doc)) for doc in cursor]
-
-
-
 # display all users
 @app.route('/allWebsite',methods=['GET'])
 def users():
 	users = collection.find()
 	resp = dumps(users)
 	return resp
+
+# socket send data
+@app.route('/sendData',methods=['POST'])
+def sendData():
+    data=request.json['data']
+    socketio.emit('data',data)
+    return jsonify({'result':'OK'})
+
+# socket send log
+@app.route('/sendLog',methods=['POST'])
+def sendLog():
+    data=request.json['msg']
+    socketio.emit('log',msg)
+    return jsonify({'result':'OK'})
 
 
 @app.route('/darkWebsite/<id>', methods=['GET','DELETE','PUT'])
@@ -251,4 +247,4 @@ def not_found(error = None):
 
 
 if __name__=='__main__':
-    socketio.run(app, debug=True)
+    app.run(debug=True)
