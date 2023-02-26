@@ -18,6 +18,7 @@ app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
 
+# Database Connection
 def databaseConnection():
    CONNECTION_STRING = "mongodb+srv://emseccomandcenter:TUXnEN09VNM1drh3@cluster0.psiqanw.mongodb.net/?retryWrites=true&w=majority"
    client = MongoClient(CONNECTION_STRING)
@@ -124,7 +125,6 @@ def website(id):
         _xpath_of_next_btn=request.json['xpath_of_next_btn']
         _xpath_of_pagination_container=request.json['xpath_of_pagination_container']
         _tag_name_of_pages=request.json['tag_name_of_pages']
-        _failed_count =request.json['failedCount']
         _clickable =request.json['clickable']
         _clickable_btn_xpath =request.json['clickable_btn_xpath']
         _waitTime =request.json['waitTime']
@@ -133,46 +133,48 @@ def website(id):
         _time =request.json['time']
         _isUrgent =request.json['isUrgent']
         
+        dict = {}
         if(len(str(_name))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"name":_name}})
+            dict['name'] = _name
         if(len(str(_darkweb_url))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"darkweb_url":_darkweb_url}})
+            dict['darkweb_url'] = _darkweb_url 
         if(len(str(_iterator))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"iterator":_iterator}})
+            dict['iterator'] = _iterator
         if(len(str(_title_xpath))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"title_xpath":_title_xpath}})
+            dict['title_xpath'] = _title_xpath
         if(len(str(_body_xpath))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"body_xpath":_body_xpath}})
+            dict['body_xpath'] = _body_xpath
         if(len(str(_date_xpath))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"date_xpath":_date_xpath}})
+            dict['date_xpath'] = _date_xpath
         if(len(str(_scrollable))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"scrollable":_scrollable}})
+            dict['scrollable'] = _scrollable
         if(len(str(_pagination))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"pagination":_pagination}})
+            dict['pagination'] = _pagination
         if(len(str(_is_nextbtn))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"is_nextbtn":_is_nextbtn}})
+            dict['is_nextbtn'] = _is_nextbtn
         if(len(str(_xpath_of_next_btn))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"xpath_of_next_btn":_xpath_of_next_btn}})
+            dict['xpath_of_next_btn'] = _xpath_of_next_btn
         if(len(str(_xpath_of_pagination_container))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"xpath_of_pagination_container":_xpath_of_pagination_container}})
+            dict['xpath_of_pagination_container'] = _xpath_of_pagination_container
         if(len(str(_tag_name_of_pages))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"tag_name_of_pages":_tag_name_of_pages}})
-        if(len(str(_failed_count))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"failedCount":_failed_count}})
+            dict['tag_name_of_pages'] = _tag_name_of_pages
         if(len(str(_clickable))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"clickable":_clickable}})
+            dict['clickable'] = _clickable
         if(len(str(_clickable_btn_xpath))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"clickable_btn_xpath":_clickable_btn_xpath}})
+            dict['clickable_btn_xpath'] = _clickable_btn_xpath
         if(len(str(_waitTime))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"waitTime":_waitTime}})
+            dict['waitTime'] = _waitTime
         if(len(str(_status))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"status":_status}})
+            dict['status'] = _status
         if(len(str(_isSPA))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"isSPA":_isSPA}})
+            dict['isSPA'] = _isSPA
         if(len(str(_time))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"time":_time}})
+            dict['time'] = _time
         if(len(str(_isUrgent))>0):
-            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"isUrgent":_isUrgent}})
+            dict['isUrgent'] = _isUrgent
+        
+        # Update values in website
+        collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict})
                 
         resp = jsonify("Website updated")
         resp.status_code = 200
