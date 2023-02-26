@@ -1,6 +1,7 @@
 try:
     from flask import Flask, jsonify, request
     from pymongo import MongoClient
+    from bson.json_util import dumps
     from bson.objectid import ObjectId
     import json
     import re
@@ -36,7 +37,6 @@ def send_otp_for_authentication(id,_secret_key):
     return totp.verify(_secret_key)
     
 
-
 @app.route('/login', methods=['POST'])
 def login():
     _email = request.json['email']
@@ -60,16 +60,12 @@ def login():
         return jsonify("User does not exist")
 
 
-@app.route('/<page_>',methods = ['POST'])
-def fetch(page_):
-    page = int(request.args.get("page", page_))
-    per_page = 10  # A const value.
-
-    # For pagination, it's necessary to sort by name,
-    # then skip the number of docs that earlier pages would have displayed,
-    # and then to limit to the fixed page size, ``per_page``.
-    cursor = collection.find().sort("name").skip(per_page * (page - 1)).limit(per_page)
-    return [json.loads(json_util.dumps(doc)) for doc in cursor]
+# display all users
+@app.route('/allWebsite',methods=['GET'])
+def users():
+	users = collection.find()
+	resp = dumps(users)
+	return resp
 
 
 @app.route('/darkWebsite/<id>', methods=['GET','DELETE','PUT'])
