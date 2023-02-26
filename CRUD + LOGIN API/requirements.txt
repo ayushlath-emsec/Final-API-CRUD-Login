@@ -1,0 +1,8 @@
+flask
+pymongo
+bson
+re
+bycrypt
+pyotp
+flask_socketio
+flask_cors
