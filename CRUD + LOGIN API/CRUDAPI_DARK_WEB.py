@@ -196,7 +196,7 @@ def post():
     waitTime =request.json['waitTime']
     status = "not started"
     isSPA =request.json['isSPA']
-    time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     isUrgent = False
     
     if collection.count_documents({'darkweb_url':darkweb_url})>0:
