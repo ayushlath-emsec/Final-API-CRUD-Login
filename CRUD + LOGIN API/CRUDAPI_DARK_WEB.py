@@ -128,9 +128,7 @@ def website(id):
         _clickable =request.json['clickable']
         _clickable_btn_xpath =request.json['clickable_btn_xpath']
         _waitTime =request.json['waitTime']
-        _status =request.json['status']
         _isSPA =request.json['isSPA']
-        _time =request.json['time']
         _isUrgent =request.json['isUrgent']
         
         dict = {}
@@ -164,12 +162,8 @@ def website(id):
             dict['clickable_btn_xpath'] = _clickable_btn_xpath
         if(len(str(_waitTime))>0):
             dict['waitTime'] = _waitTime
-        if(len(str(_status))>0):
-            dict['status'] = _status
         if(len(str(_isSPA))>0):
             dict['isSPA'] = _isSPA
-        if(len(str(_time))>0):
-            dict['time'] = _time
         if(len(str(_isUrgent))>0):
             dict['isUrgent'] = _isUrgent
         
@@ -195,19 +189,15 @@ def post():
     xpath_of_next_btn=request.json['xpath_of_next_btn']
     xpath_of_pagination_container=request.json['xpath_of_pagination_container']
     tag_name_of_pages=request.json['tag_name_of_pages']
-    failed_count =request.json['failedCount']
     clickable =request.json['clickable']
     clickable_btn_xpath =request.json['clickable_btn_xpath']
     waitTime =request.json['waitTime']
-    status =request.json['status']
     isSPA =request.json['isSPA']
-    time =request.json['time']
     isUrgent =request.json['isUrgent']
-    data = collection.find()
     if collection.count_documents({'darkweb_url':darkweb_url})>0:
         return jsonify("url Already exist.. Update the field if you need")
     if request.method == "POST":
-        id = collection.insert_one({'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'failedCount':failed_count,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'status':status,'isSPA':isSPA,'time':time,'isUrgent':isUrgent})
+        collection.insert_one({'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'isSPA':isSPA,'isUrgent':isUrgent})
         resp = jsonify("Website added successfully")
         resp.status_code = 200
         return resp
