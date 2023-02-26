@@ -4,7 +4,7 @@ try:
     from bson.json_util import dumps
     from bson.objectid import ObjectId
     import json
-    import datetime
+    from datetime import datetime
     import time
     import re
     import bcrypt
@@ -197,7 +197,7 @@ def post():
     waitTime =request.json['waitTime']
     status = "not started"
     isSPA =request.json['isSPA']
-    time = datetime.date.fromtimestamp(time.time())
+    time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     isUrgent = False
     
     if collection.count_documents({'darkweb_url':darkweb_url})>0:
