@@ -197,7 +197,7 @@ def website(id):
                 if(len(str(_isUrgent))>0):
                     collection.update_one({"_id":d['_id']},{"$set":{"isUrgent":_isUrgent}})
                         
-                resp = jsonify("User updated")
+                resp = jsonify("Website updated")
                 resp.status_code = 200
                 return resp
 
@@ -228,7 +228,7 @@ def post():
         return jsonify("url Already exist.. Update the field if you need")
     if request.method == "POST":
         id = collection.insert_one({'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'failedCount':failed_count,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'status':status,'isSPA':isSPA,'time':time,'isUrgent':isUrgent})
-        resp = jsonify("User added successfully")
+        resp = jsonify("Website added successfully")
         resp.status_code = 200
         return resp
     else:
