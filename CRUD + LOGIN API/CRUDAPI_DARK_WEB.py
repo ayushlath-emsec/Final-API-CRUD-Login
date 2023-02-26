@@ -95,7 +95,7 @@ def website(id):
         try:
             data =collection.find_one({'_id':ObjectId(id)})
             user = dumps(data)
-            return user
+            return user 
         except:
             resp = jsonify("No Content")
             resp.status_code = 204
@@ -106,7 +106,7 @@ def website(id):
             query = {"_id": ObjectId(id)}
             collection.delete_one(query)
             resp = jsonify("Field Deleted")
-            resp.status_code = 410
+            resp.status_code = 200
             return resp
         except:
             resp = jsonify("Already Deleted")
