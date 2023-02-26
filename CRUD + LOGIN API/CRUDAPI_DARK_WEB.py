@@ -38,7 +38,7 @@ def send_otp_for_authentication(id,_secret_key):
     totp.now()
     return totp.verify(_secret_key)
     
-
+# login
 @app.route('/login', methods=['POST'])
 def login():
     _email = request.json['email']
@@ -61,7 +61,6 @@ def login():
     else:
         return jsonify("User does not exist")
 
-
 # display all users
 @app.route('/allWebsite',methods=['GET'])
 def users():
@@ -83,35 +82,14 @@ def sendLog():
     socketio.emit('log',msg)
     return jsonify({'result':'OK'})
 
-
+# GET , PUT and UPDATE Website
 @app.route('/darkWebsite/<id>', methods=['GET','DELETE','PUT'])
 def website(id):
     if request.method=='GET':
         try:
             data =collection.find_one({'_id':ObjectId(id)})
-            name =data['name']
-            darkweb_url =data['darkweb_url'] 
-            iterator=data['iterator']
-            title_xpath=data['title_xpath']
-            body_xpath=data['body_xpath']
-            date_xpath=data['date_xpath']
-            scrollable=data['scrollable']
-            pagination = data['pagination']
-            is_nextbtn=data['is_nextbtn']
-            xpath_of_next_btn=data['xpath_of_next_btn']
-            xpath_of_pagination_container=data['xpath_of_pagination_container']
-            tag_name_of_pages=data['tag_name_of_pages']
-            failed_count =data['failedCount']
-            clickable =data['clickable']
-            clickable_btn_xpath =data['clickable_btn_xpath']
-            waitTime =data['waitTime']
-            status =data['status']
-            isSPA =data['isSPA']
-            time =data['time']
-            isUrgent =data['isUrgent']
-            result =[]
-            result=({'_id':id,'name':name,'darkweb_url':darkweb_url,'iterator':iterator,'title_xpath':title_xpath,'body_xpath':body_xpath,'date_xpath':date_xpath,'scrollable':scrollable,'pagination':pagination,'is_nextbtn':is_nextbtn,'xpath_of_next_btn':xpath_of_next_btn,'xpath_of_pagination_container':xpath_of_pagination_container,'tag_name_of_pages':tag_name_of_pages,'failedCount':failed_count,'clickable':clickable,'clickable_btn_xpath':clickable_btn_xpath,'waitTime':waitTime,'status':status,'isSPA':isSPA,'time':time,'isUrgent':isUrgent})
-            return result
+            user = dumps(data)
+            return user
         except:
             resp = jsonify("No Content")
             resp.status_code = 204
@@ -152,55 +130,52 @@ def website(id):
         _time =request.json['time']
         _isUrgent =request.json['isUrgent']
         
-        
-        data = collection.find()
-        for d in data:
-            if d['_id'] == ObjectId(id):
-                if(len(str(_name))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"name":_name}})
-                if(len(str(_darkweb_url))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"darkweb_url":_darkweb_url}})
-                if(len(str(_iterator))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"iterator":_iterator}})
-                if(len(str(_title_xpath))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"title_xpath":_title_xpath}})
-                if(len(str(_body_xpath))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"body_xpath":_body_xpath}})
-                if(len(str(_date_xpath))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"date_xpath":_date_xpath}})
-                if(len(str(_scrollable))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"scrollable":_scrollable}})
-                if(len(str(_pagination))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"pagination":_pagination}})
-                if(len(str(_is_nextbtn))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"is_nextbtn":_is_nextbtn}})
-                if(len(str(_xpath_of_next_btn))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"xpath_of_next_btn":_xpath_of_next_btn}})
-                if(len(str(_xpath_of_pagination_container))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"xpath_of_pagination_container":_xpath_of_pagination_container}})
-                if(len(str(_tag_name_of_pages))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"tag_name_of_pages":_tag_name_of_pages}})
-                if(len(str(_failed_count))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"failedCount":_failed_count}})
-                if(len(str(_clickable))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"clickable":_clickable}})
-                if(len(str(_clickable_btn_xpath))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"clickable_btn_xpath":_clickable_btn_xpath}})
-                if(len(str(_waitTime))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"waitTime":_waitTime}})
-                if(len(str(_status))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"status":_status}})
-                if(len(str(_isSPA))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"isSPA":_isSPA}})
-                if(len(str(_time))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"time":_time}})
-                if(len(str(_isUrgent))>0):
-                    collection.update_one({"_id":d['_id']},{"$set":{"isUrgent":_isUrgent}})
-                        
-                resp = jsonify("Website updated")
-                resp.status_code = 200
-                return resp
+        if(len(str(_name))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"name":_name}})
+        if(len(str(_darkweb_url))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"darkweb_url":_darkweb_url}})
+        if(len(str(_iterator))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"iterator":_iterator}})
+        if(len(str(_title_xpath))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"title_xpath":_title_xpath}})
+        if(len(str(_body_xpath))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"body_xpath":_body_xpath}})
+        if(len(str(_date_xpath))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"date_xpath":_date_xpath}})
+        if(len(str(_scrollable))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"scrollable":_scrollable}})
+        if(len(str(_pagination))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"pagination":_pagination}})
+        if(len(str(_is_nextbtn))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"is_nextbtn":_is_nextbtn}})
+        if(len(str(_xpath_of_next_btn))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"xpath_of_next_btn":_xpath_of_next_btn}})
+        if(len(str(_xpath_of_pagination_container))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"xpath_of_pagination_container":_xpath_of_pagination_container}})
+        if(len(str(_tag_name_of_pages))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"tag_name_of_pages":_tag_name_of_pages}})
+        if(len(str(_failed_count))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"failedCount":_failed_count}})
+        if(len(str(_clickable))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"clickable":_clickable}})
+        if(len(str(_clickable_btn_xpath))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"clickable_btn_xpath":_clickable_btn_xpath}})
+        if(len(str(_waitTime))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"waitTime":_waitTime}})
+        if(len(str(_status))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"status":_status}})
+        if(len(str(_isSPA))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"isSPA":_isSPA}})
+        if(len(str(_time))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"time":_time}})
+        if(len(str(_isUrgent))>0):
+            collection.find_one_and_update({"_id":ObjectId(id)},{"$set":{"isUrgent":_isUrgent}})
+                
+        resp = jsonify("Website updated")
+        resp.status_code = 200
+        return resp
 
+# Add Website
 @app.route('/darkWebsite', methods=['POST'])
 def post():
     name =request.json['name']
@@ -245,6 +220,6 @@ def not_found(error = None):
     resp.status_code = 404
     return resp    
 
-
+# main Function
 if __name__=='__main__':
     app.run(debug=True)
