@@ -103,15 +103,15 @@ def website(id):
 
     if request.method=='DELETE':
         try:
-		query = {"_id": ObjectId(id)}
-		collection.delete_one(query)
-		resp = jsonify("Field Deleted")
-		resp.status_code = 410
-		return resp
-	except:
-		resp = jsonify("Already Deleted")
-		resp.status_code = 210
-		return resp
+            query = {"_id": ObjectId(id)}
+            collection.delete_one(query)
+            resp = jsonify("Field Deleted")
+            resp.status_code = 410
+            return resp
+        except:
+            resp = jsonify("Already Deleted")
+            resp.status_code = 210
+            return resp
 
     if request.method =='PUT':
         _name =request.json['name']
