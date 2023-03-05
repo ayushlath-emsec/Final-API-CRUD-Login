@@ -59,9 +59,12 @@ def login():
         if bcrypt.hashpw(_password.encode('utf-8'), login_user[0]['password']) == login_user[0]['password']:
             correct = send_otp_for_authentication(login_user[0]['_id'],_secret_key)
             if correct:
-                return jsonify("Login Successfull")
+                resp = jsonify("Login Successfull")
+                resp.status_code = 200
+                return resp
             else:
-                return jsonify("Login Failed")
+                resp = jsonify("Login Failed")
+                resp.status_code = 400
         else:
             return jsonify("Wrong Password")
     else:
@@ -95,7 +98,7 @@ def website(id):
         try:
             data =collection.find_one({'_id':ObjectId(id)})
             user = dumps(data)
-            return user 
+            return user
         except:
             resp = jsonify("No Content")
             resp.status_code = 204
@@ -110,7 +113,7 @@ def website(id):
             return resp
         except:
             resp = jsonify("Already Deleted")
-            resp.status_code = 210
+            resp.status_code = 208
             return resp
 
     if request.method =='PUT':
