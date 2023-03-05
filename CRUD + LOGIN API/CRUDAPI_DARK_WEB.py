@@ -65,6 +65,7 @@ def login():
             else:
                 resp = jsonify("Login Failed")
                 resp.status_code = 400
+		return resp
         else:
             return jsonify("Wrong Password")
     else:
